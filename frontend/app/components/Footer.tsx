@@ -1,4 +1,17 @@
 export default function Footer() {
+  const skills = [
+    { name: 'Shopify', colorClasses: 'hover:bg-shopify focus:bg-shopify focus-visible:bg-shopify active:bg-shopify' },
+    { name: 'Headless', colorClasses: 'hover:bg-brand focus:bg-brand focus-visible:bg-brand active:bg-brand' },
+    { name: 'Sanity', colorClasses: 'hover:bg-sanity focus:bg-sanity focus-visible:bg-sanity active:bg-sanity' },
+    { name: 'Storyblok', colorClasses: 'hover:bg-storyblok focus:bg-storyblok focus-visible:bg-storyblok active:bg-storyblok' },
+    { name: 'Analytics', colorClasses: 'hover:bg-analytics focus:bg-analytics focus-visible:bg-analytics active:bg-analytics' },
+    { name: 'Klaviyo', colorClasses: 'hover:bg-klaviyo-black focus:bg-klaviyo-black focus-visible:bg-klaviyo-black active:bg-klaviyo-black' },
+    { name: 'Algolia', colorClasses: 'hover:bg-algolia focus:bg-algolia focus-visible:bg-algolia active:bg-algolia' }
+  ]
+
+  const baseClasses = "rounded-full flex gap-2 font-mono whitespace-nowrap items-center border border-black hover:cursor-pointer py-2 px-4 transition-colors duration-200"
+  const interactiveClasses = "hover:text-white focus:text-white focus-visible:text-white active:text-white"
+
   return (
     <footer className="bg-gray-50 relative">
       <div className="absolute inset-0 bg-[url(/images/tile-grid-black.png)] bg-size-[17px] opacity-20 bg-position-[0_1]" />
@@ -14,15 +27,17 @@ export default function Footer() {
               </a>
             </div>
           </div>
-          <div className="flex flex-wrap gap-3 items-center justify-center lg:justify-start lg:w-1/2 lg:max-w-1/3 lg:pl-4 text-xs">
-            <span className="rounded-full flex gap-2 font-mono whitespace-nowrap items-center border border-black hover:bg-shopify hover:cursor-pointer focus:bg-shopify py-2 px-4 hover:text-white transition-colors duration-200" > Shopify </span>
-            <span className="rounded-full flex gap-2 font-mono whitespace-nowrap items-center border border-black hover:bg-brand hover:cursor-pointer focus:bg-brand py-2 px-4 hover:text-white transition-colors duration-200" > Headless </span>
-            <span className="rounded-full flex gap-2 font-mono whitespace-nowrap items-center border border-black hover:bg-sanity hover:cursor-pointer focus:bg-sanity py-2 px-4 hover:text-white transition-colors duration-200" > Sanity</span>
-            <span className="rounded-full flex gap-2 font-mono whitespace-nowrap items-center border border-black hover:bg-storyblok hover:cursor-pointer focus:bg-storyblok py-2 px-4 hover:text-white transition-colors duration-200" > Storyblok </span>
-            <span className="rounded-full flex gap-2 font-mono whitespace-nowrap items-center border border-black hover:bg-analytics hover:cursor-pointer focus:bg-analytics py-2 px-4 hover:text-white transition-colors duration-200" > Analytics </span>
-            <span className="rounded-full flex gap-2 font-mono whitespace-nowrap items-center border border-black hover:bg-klaviyo-black hover:cursor-pointer focus:bg-klaviyo-black py-2 px-4 hover:text-white transition-colors duration-200" > Klaviyo </span>
-            <span className="rounded-full flex gap-2 font-mono whitespace-nowrap items-center border border-black hover:bg-algolia hover:cursor-pointer focus:bg-algolia py-2 px-4 hover:text-white transition-colors duration-200" > Algolia </span>
-          </div>
+          <ul className="flex flex-wrap gap-3 items-center justify-center lg:justify-start lg:w-1/2 lg:max-w-1/3 lg:pl-4 text-xs list-none">
+            {skills.map((skill) => (
+              <li
+                key={skill.name}
+                tabIndex={0}
+                className={`${baseClasses} ${interactiveClasses} ${skill.colorClasses}`}
+              >
+                {skill.name}
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </footer>
