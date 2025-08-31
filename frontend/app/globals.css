@@ -10,10 +10,16 @@
 @theme {
   --shadow-layer: 0 35px 60px -15px rgba(0, 0, 0, 0.3);
 
-  --color-framework: #000;
+  --color-framework: #000000;
   --color-black: #0b0b0b;
-  --color-white: #fff;
-  --color-brand: #f50;
+  --color-white: #ffffff;
+  --color-brand: #f50000;
+  --color-shopify: #5E8E3E;
+  --color-sanity: #ff5500;
+  --color-analytics: #E37400;
+  --color-klaviyo-black: #252C26;
+  --color-storyblok: #00B3B0;
+  --color-algolia: #5468ff;
   --color-blue: #0052ff;
   --color-yellow: #cdea19;
   --color-gray-50: #f6f6f8;

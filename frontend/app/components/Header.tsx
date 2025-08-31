@@ -1,9 +1,9 @@
 import Link from 'next/link'
-import {settingsQuery} from '@/sanity/lib/queries'
-import {sanityFetch} from '@/sanity/lib/live'
+import { settingsQuery } from '@/sanity/lib/queries'
+import { sanityFetch } from '@/sanity/lib/live'
 
 export default async function Header() {
-  const {data: settings} = await sanityFetch({
+  const { data: settings } = await sanityFetch({
     query: settingsQuery,
   })
 
@@ -30,12 +30,10 @@ export default async function Header() {
 
               <li className="sm:before:w-[1px] sm:before:bg-gray-200 before:block flex sm:gap-4 md:gap-6">
                 <Link
-                  className="rounded-full flex gap-4 items-center bg-black hover:bg-blue focus:bg-blue py-2 px-4 justify-center sm:py-3 sm:px-6 text-white transition-colors duration-200"
-                  href="https://github.com/sanity-io/sanity-template-nextjs-clean"
+                  href="https://github.com/benjaminv/next-post-sanity"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <span className="whitespace-nowrap">View on GitHub</span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
