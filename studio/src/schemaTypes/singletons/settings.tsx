@@ -14,12 +14,19 @@ export const settings = defineType({
   title: 'Settings',
   type: 'document',
   icon: CogIcon,
+  groups: [
+    {name: 'general', title: 'General', default: true},
+    {name: 'homepage', title: 'Homepage'},
+    {name: 'about', title: 'About'},
+  ],
   fields: [
+    // ── General ──
     defineField({
       name: 'title',
       description: 'This field is the title of your blog.',
       title: 'Title',
       type: 'string',
+      group: 'general',
       initialValue: demo.title,
       validation: (rule) => rule.required(),
     }),
@@ -28,9 +35,9 @@ export const settings = defineType({
       description: 'Used on the Homepage',
       title: 'Description',
       type: 'array',
+      group: 'general',
       initialValue: demo.description,
       of: [
-        // Define a minified block content field for the description. https://www.sanity.io/docs/block-content
         defineArrayMember({
           type: 'block',
           options: {},
@@ -119,6 +126,7 @@ export const settings = defineType({
       name: 'ogImage',
       title: 'Open Graph Image',
       type: 'image',
+      group: 'general',
       description: 'Displayed on social cards and search engine results.',
       options: {
         hotspot: true,
@@ -153,6 +161,128 @@ export const settings = defineType({
               More information
             </a>
           ),
+        }),
+      ],
+    }),
+
+    // ── Homepage ──
+    defineField({
+      name: 'heroIntro',
+      title: 'Hero Introduction',
+      description: 'The intro paragraph displayed under your name on the homepage.',
+      type: 'text',
+      group: 'homepage',
+      rows: 3,
+    }),
+    defineField({
+      name: 'statusLine',
+      title: 'Status Line',
+      description: 'Displayed in mono font below social icons, e.g. "Currently building @ Shopify"',
+      type: 'string',
+      group: 'homepage',
+    }),
+    defineField({
+      name: 'socialLinks',
+      title: 'Social Links',
+      description: 'Social media profiles displayed on homepage and footer.',
+      type: 'array',
+      group: 'homepage',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          name: 'socialLink',
+          fields: [
+            defineField({
+              name: 'platform',
+              title: 'Platform',
+              type: 'string',
+              options: {
+                list: [
+                  {title: 'Twitter / X', value: 'twitter'},
+                  {title: 'GitHub', value: 'github'},
+                  {title: 'LinkedIn', value: 'linkedin'},
+                  {title: 'YouTube', value: 'youtube'},
+                ],
+              },
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'url',
+              title: 'URL',
+              type: 'url',
+              validation: (rule) => rule.required(),
+            }),
+          ],
+          preview: {
+            select: {title: 'platform', subtitle: 'url'},
+          },
+        }),
+      ],
+    }),
+
+    // ── About ──
+    defineField({
+      name: 'aboutBio',
+      title: 'About Bio',
+      description: 'Bio paragraphs for the About Me section on the homepage.',
+      type: 'array',
+      group: 'about',
+      of: [
+        defineArrayMember({
+          type: 'block',
+          styles: [{title: 'Normal', value: 'normal'}],
+          lists: [],
+          marks: {
+            decorators: [
+              {title: 'Bold', value: 'strong'},
+              {title: 'Italic', value: 'em'},
+            ],
+            annotations: [
+              {
+                name: 'link',
+                type: 'object',
+                title: 'Link',
+                fields: [
+                  defineField({
+                    name: 'href',
+                    title: 'URL',
+                    type: 'url',
+                  }),
+                ],
+              },
+            ],
+          },
+        }),
+      ],
+    }),
+    defineField({
+      name: 'profileTitle',
+      title: 'Profile Title',
+      description: 'Short title shown on profile card, e.g. "Shopify Developer + E-commerce"',
+      type: 'string',
+      group: 'about',
+    }),
+    defineField({
+      name: 'topics',
+      title: 'Topics / Skills',
+      description: 'Topics you write about — displayed as colored pills.',
+      type: 'array',
+      group: 'about',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          name: 'topic',
+          fields: [
+            defineField({
+              name: 'name',
+              title: 'Name',
+              type: 'string',
+              validation: (rule) => rule.required(),
+            }),
+          ],
+          preview: {
+            select: {title: 'name'},
+          },
         }),
       ],
     }),

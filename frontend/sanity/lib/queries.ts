@@ -1,6 +1,14 @@
 import {defineQuery} from 'next-sanity'
 
-export const settingsQuery = defineQuery(`*[_type == "settings"][0]`)
+export const settingsQuery = defineQuery(`*[_type == "settings"][0]{
+  ...,
+  heroIntro,
+  statusLine,
+  socialLinks,
+  aboutBio,
+  profileTitle,
+  topics
+}`)
 
 const postFields = /* groq */ `
   _id,
@@ -8,6 +16,8 @@ const postFields = /* groq */ `
   "title": coalesce(title, "Untitled"),
   "slug": slug.current,
   excerpt,
+  tags,
+  "readTime": round(length(pt::text(content)) / 5 / 200),
   coverImage,
   "date": coalesce(date, _updatedAt),
   "author": author->{firstName, lastName, picture},
