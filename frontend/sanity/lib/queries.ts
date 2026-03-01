@@ -104,13 +104,13 @@ export const postQuery = defineQuery(`
 `)
 
 export const adjacentPostsQuery = defineQuery(`{
-  "prev": *[_type == "post" && defined(slug.current) && (
+  "prev": *[_type == "post" && _id != $id && defined(slug.current) && (
     date > $date || (date == $date && _updatedAt > $updatedAt)
   )] | order(date asc, _updatedAt asc) [0] {
     "title": coalesce(title, "Untitled"),
     "slug": slug.current
   },
-  "next": *[_type == "post" && defined(slug.current) && (
+  "next": *[_type == "post" && _id != $id && defined(slug.current) && (
     date < $date || (date == $date && _updatedAt < $updatedAt)
   )] | order(date desc, _updatedAt desc) [0] {
     "title": coalesce(title, "Untitled"),

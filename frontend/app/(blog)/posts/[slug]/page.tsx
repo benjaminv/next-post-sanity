@@ -78,7 +78,7 @@ export default async function PostPage(props: Props) {
 
   const {data: adjacent} = await sanityFetch({
     query: adjacentPostsQuery,
-    params: {date: post.date, updatedAt: post.date},
+    params: {id: post._id, date: post.date, updatedAt: post.date},
   })
 
   return (
