@@ -72,16 +72,26 @@ export default function AboutMe({settings}: AboutMeProps) {
 
           <div className="lg:col-span-2">
             <div className="bg-gray-50 rounded-xl p-8 text-center">
-              <div className="w-24 h-24 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center mx-auto mb-4">
+              <div className="w-24 h-24 rounded-full bg-gradient-to-br from-emerald-300 to-teal-500 flex items-center justify-center mx-auto mb-4">
                 <span className="text-white text-2xl font-bold">
-                  {settings.title ? getInitials(settings.title) : '?'}
+                  {settings.profileAuthor
+                    ? getInitials(`${settings.profileAuthor.firstName ?? ''} ${settings.profileAuthor.lastName ?? ''}`)
+                    : settings.title
+                      ? getInitials(settings.title)
+                      : '?'}
                 </span>
               </div>
-              <h3 className="font-bold text-xl mb-1">{settings.title}</h3>
+              <h3 className="font-bold text-xl mb-1">
+                {settings.profileAuthor
+                  ? `${settings.profileAuthor.firstName} ${settings.profileAuthor.lastName}`
+                  : settings.title}
+              </h3>
               {settings.profileTitle && (
                 <p className="text-gray-500 text-sm mb-2">{settings.profileTitle}</p>
               )}
-              <p className="text-brand font-mono text-sm">@benuoa everywhere</p>
+              {settings.profileTagline && (
+                <p className="text-brand font-mono text-sm">{settings.profileTagline}</p>
+              )}
             </div>
           </div>
         </div>

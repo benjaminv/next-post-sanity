@@ -257,6 +257,21 @@ export const settings = defineType({
 
     // ── About ──
     defineField({
+      name: 'profileAuthor',
+      title: 'Profile Author',
+      description: 'Select the person to display on the About Me profile card.',
+      type: 'reference',
+      to: [{type: 'person'}],
+      group: 'about',
+    }),
+    defineField({
+      name: 'profileTagline',
+      title: 'Profile Tagline',
+      description: 'Free-text line shown below the profile title, e.g. "@benuoa everywhere"',
+      type: 'string',
+      group: 'about',
+    }),
+    defineField({
       name: 'aboutBio',
       title: 'About Bio',
       description: 'Bio paragraphs for the About Me section on the homepage.',

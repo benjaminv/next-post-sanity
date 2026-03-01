@@ -605,7 +605,7 @@ export declare const internalGroqTypeReferenceTo: unique symbol
 
 // Source: sanity/lib/queries.ts
 // Variable: settingsQuery
-// Query: *[_type == "settings"][0]{  ...,  heroSubheading,  heroHeading,  heroIntro,  statusLine,  socialLinks,  aboutBio,  profileTitle,  topics,  featuredTweets}
+// Query: *[_type == "settings"][0]{  ...,  heroSubheading,  heroHeading,  heroIntro,  statusLine,  socialLinks,  aboutBio,  "profileAuthor": profileAuthor->{firstName, lastName, picture},  profileTitle,  profileTagline,  topics,  featuredTweets}
 export type SettingsQueryResult = {
   _id: string
   _type: 'settings'
@@ -680,6 +680,8 @@ export type SettingsQueryResult = {
     _type: 'topic'
     _key: string
   }> | null
+  profileAuthor: null
+  profileTagline: null
 } | null
 
 // Source: sanity/lib/queries.ts
@@ -916,7 +918,7 @@ export type PostQueryResult = {
 
 // Source: sanity/lib/queries.ts
 // Variable: adjacentPostsQuery
-// Query: {  "prev": *[_type == "post" && defined(slug.current) && (    date > $date || (date == $date && _updatedAt > $updatedAt)  )] | order(date asc, _updatedAt asc) [0] {    "title": coalesce(title, "Untitled"),    "slug": slug.current  },  "next": *[_type == "post" && defined(slug.current) && (    date < $date || (date == $date && _updatedAt < $updatedAt)  )] | order(date desc, _updatedAt desc) [0] {    "title": coalesce(title, "Untitled"),    "slug": slug.current  }}
+// Query: {  "prev": *[_type == "post" && _id != $id && defined(slug.current) && (    date > $date || (date == $date && _updatedAt > $updatedAt)  )] | order(date asc, _updatedAt asc) [0] {    "title": coalesce(title, "Untitled"),    "slug": slug.current  },  "next": *[_type == "post" && _id != $id && defined(slug.current) && (    date < $date || (date == $date && _updatedAt < $updatedAt)  )] | order(date desc, _updatedAt desc) [0] {    "title": coalesce(title, "Untitled"),    "slug": slug.current  }}
 export type AdjacentPostsQueryResult = {
   prev: {
     title: string
@@ -946,13 +948,13 @@ export type PagesSlugsResult = Array<{
 import '@sanity/client'
 declare module '@sanity/client' {
   interface SanityQueries {
-    '*[_type == "settings"][0]{\n  ...,\n  heroSubheading,\n  heroHeading,\n  heroIntro,\n  statusLine,\n  socialLinks,\n  aboutBio,\n  profileTitle,\n  topics,\n  featuredTweets\n}': SettingsQueryResult
+    '*[_type == "settings"][0]{\n  ...,\n  heroSubheading,\n  heroHeading,\n  heroIntro,\n  statusLine,\n  socialLinks,\n  aboutBio,\n  "profileAuthor": profileAuthor->{firstName, lastName, picture},\n  profileTitle,\n  profileTagline,\n  topics,\n  featuredTweets\n}': SettingsQueryResult
     '\n  *[_type == \'page\' && slug.current == $slug][0]{\n    _id,\n    _type,\n    name,\n    slug,\n    heading,\n    subheading,\n    "pageBuilder": pageBuilder[]{\n      ...,\n      _type == "callToAction" => {\n        ...,\n        button {\n          ...,\n          \n  link {\n      ...,\n      \n  _type == "link" => {\n    "page": page->slug.current,\n    "post": post->slug.current\n  }\n\n      }\n\n        }\n      },\n      _type == "infoSection" => {\n        content[]{\n          ...,\n          markDefs[]{\n            ...,\n            \n  _type == "link" => {\n    "page": page->slug.current,\n    "post": post->slug.current\n  }\n\n          }\n        }\n      },\n    },\n  }\n': GetPageQueryResult
     '\n  *[_type == "page" || _type == "post" && defined(slug.current)] | order(_type asc) {\n    "slug": slug.current,\n    _type,\n    _updatedAt,\n  }\n': SitemapDataResult
     '\n  *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  tags,\n  "readTime": round(length(pt::text(content)) / 5 / 200),\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture},\n\n  }\n': AllPostsQueryResult
     '\n  *[_type == "post" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  tags,\n  "readTime": round(length(pt::text(content)) / 5 / 200),\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture},\n\n  }\n': MorePostsQueryResult
     '\n  *[_type == "post" && slug.current == $slug] [0] {\n    content[]{\n    ...,\n    markDefs[]{\n      ...,\n      \n  _type == "link" => {\n    "page": page->slug.current,\n    "post": post->slug.current\n  }\n\n    }\n  },\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  tags,\n  "readTime": round(length(pt::text(content)) / 5 / 200),\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture},\n\n  }\n': PostQueryResult
-    '{\n  "prev": *[_type == "post" && defined(slug.current) && (\n    date > $date || (date == $date && _updatedAt > $updatedAt)\n  )] | order(date asc, _updatedAt asc) [0] {\n    "title": coalesce(title, "Untitled"),\n    "slug": slug.current\n  },\n  "next": *[_type == "post" && defined(slug.current) && (\n    date < $date || (date == $date && _updatedAt < $updatedAt)\n  )] | order(date desc, _updatedAt desc) [0] {\n    "title": coalesce(title, "Untitled"),\n    "slug": slug.current\n  }\n}': AdjacentPostsQueryResult
+    '{\n  "prev": *[_type == "post" && _id != $id && defined(slug.current) && (\n    date > $date || (date == $date && _updatedAt > $updatedAt)\n  )] | order(date asc, _updatedAt asc) [0] {\n    "title": coalesce(title, "Untitled"),\n    "slug": slug.current\n  },\n  "next": *[_type == "post" && _id != $id && defined(slug.current) && (\n    date < $date || (date == $date && _updatedAt < $updatedAt)\n  )] | order(date desc, _updatedAt desc) [0] {\n    "title": coalesce(title, "Untitled"),\n    "slug": slug.current\n  }\n}': AdjacentPostsQueryResult
     '\n  *[_type == "post" && defined(slug.current)]\n  {"slug": slug.current}\n': PostPagesSlugsResult
     '\n  *[_type == "page" && defined(slug.current)]\n  {"slug": slug.current}\n': PagesSlugsResult
   }
