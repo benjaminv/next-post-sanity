@@ -279,9 +279,21 @@ export const settings = defineType({
               type: 'string',
               validation: (rule) => rule.required(),
             }),
+            defineField({
+              name: 'color',
+              title: 'Color',
+              description: 'Optional — a random color will be used if not set.',
+              type: 'color',
+            }),
           ],
           preview: {
-            select: {title: 'name'},
+            select: {title: 'name', color: 'color.hex'},
+            prepare({title, color}) {
+              return {
+                title,
+                subtitle: color || 'No color set',
+              }
+            },
           },
         }),
       ],

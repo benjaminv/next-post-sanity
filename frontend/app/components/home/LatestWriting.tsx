@@ -30,7 +30,7 @@ function PostCard({post}: {post: AllPostsQueryResult[number]}) {
   return (
     <article
       data-sanity={dataAttr({id: _id, type: 'post', path: 'title'}).toString()}
-      className="border border-gray-200 rounded-lg p-6 flex flex-col justify-between hover:border-gray-300 transition-colors relative bg-white"
+      className="border border-gray-200 rounded-lg p-6 flex flex-col justify-start hover:border-gray-300 transition-colors relative bg-white"
     >
       <Link href={`/posts/${slug}`}>
         <span className="absolute inset-0 z-10" />

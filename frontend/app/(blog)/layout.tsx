@@ -47,7 +47,7 @@ export default async function BlogLayout({children}: {children: React.ReactNode}
   const {isEnabled: isDraftMode} = await draftMode()
 
   return (
-    <section className="min-h-screen pt-24">
+    <section className="min-h-screen">
       <Toaster />
       {isDraftMode && (
         <>

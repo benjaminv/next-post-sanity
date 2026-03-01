@@ -16,6 +16,7 @@ import {
   type DocumentLocation,
 } from 'sanity/presentation'
 import {assist} from '@sanity/assist'
+import {colorInput} from '@sanity/color-input'
 
 import {schemaTypes} from '../studio/src/schemaTypes'
 import {structure} from '../studio/src/structure'
@@ -111,6 +112,7 @@ export default defineConfig({
     }),
     structureTool({structure}),
     unsplashImageAsset(),
+    colorInput(),
     assist(),
     visionTool(),
   ],

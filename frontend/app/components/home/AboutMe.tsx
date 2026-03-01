@@ -4,15 +4,15 @@ import {PortableTextBlock} from 'next-sanity'
 import {SettingsQueryResult} from '@/sanity.types'
 import SectionHeading from './SectionHeading'
 
-const TOPIC_COLORS = [
-  'bg-pink-100 text-pink-700',
-  'bg-rose-100 text-rose-700',
-  'bg-green-100 text-green-700',
-  'bg-teal-100 text-teal-700',
-  'bg-amber-100 text-amber-700',
-  'bg-purple-100 text-purple-700',
-  'bg-blue-100 text-blue-700',
-  'bg-orange-100 text-orange-700',
+const RANDOM_COLORS = [
+  {bg: '#fce7f3', text: '#be185d'},
+  {bg: '#ffe4e6', text: '#be123c'},
+  {bg: '#dcfce7', text: '#15803d'},
+  {bg: '#ccfbf1', text: '#0f766e'},
+  {bg: '#fef3c7', text: '#b45309'},
+  {bg: '#ede9fe', text: '#6d28d9'},
+  {bg: '#dbeafe', text: '#1d4ed8'},
+  {bg: '#ffedd5', text: '#c2410c'},
 ]
 
 function getInitials(name: string): string {
@@ -49,14 +49,22 @@ export default function AboutMe({settings}: AboutMeProps) {
                 <hr className="border-gray-200 mb-6" />
                 <h3 className="font-bold text-lg mb-4">What I Write About</h3>
                 <div className="flex flex-wrap gap-2">
-                  {settings.topics.map((topic, index) => (
-                    <span
-                      key={topic._key}
-                      className={`text-sm font-medium px-4 py-1.5 rounded-full ${TOPIC_COLORS[index % TOPIC_COLORS.length]}`}
-                    >
-                      {topic.name}
-                    </span>
-                  ))}
+                  {settings.topics.map((topic, index) => {
+                    const hex = topic.color?.hex
+                    const fallback = RANDOM_COLORS[index % RANDOM_COLORS.length]
+                    const bgColor = hex || fallback.bg
+                    const textColor = hex ? contrastText(hex) : fallback.text
+
+                    return (
+                      <span
+                        key={topic._key}
+                        className="text-sm font-medium px-4 py-1.5 rounded-full"
+                        style={{backgroundColor: bgColor, color: textColor}}
+                      >
+                        {topic.name}
+                      </span>
+                    )
+                  })}
                 </div>
               </>
             )}
@@ -80,4 +88,13 @@ export default function AboutMe({settings}: AboutMeProps) {
       </div>
     </section>
   )
+}
+
+function contrastText(hex: string): string {
+  const r = parseInt(hex.slice(1, 3), 16)
+  const g = parseInt(hex.slice(3, 5), 16)
+  const b = parseInt(hex.slice(5, 7), 16)
+  // Relative luminance (WCAG formula)
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
+  return luminance > 0.55 ? '#1a1a1a' : '#ffffff'
 }

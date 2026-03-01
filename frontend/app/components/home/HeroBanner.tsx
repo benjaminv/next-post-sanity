@@ -1,3 +1,4 @@
+import {stegaClean} from '@sanity/client/stega'
 import {SettingsQueryResult} from '@/sanity.types'
 
 const socialIcons: Record<string, React.ReactNode> = {
@@ -33,7 +34,7 @@ export default function HeroBanner({settings}: HeroBannerProps) {
   return (
     <section className="relative bg-gradient-to-b from-mint to-white">
       <div className="container">
-        <div className="max-w-3xl py-16 sm:py-24 lg:py-32">
+        <div className="max-w-3xl pt-32 sm:pt-40 lg:pt-48 pb-16 sm:pb-24 lg:pb-32">
           <p className="text-brand font-mono text-sm uppercase tracking-wider mb-4">Hello, I&apos;m</p>
           <h1 className="font-[family-name:var(--font-playfair)] text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-black mb-6">
             {settings.title}
@@ -46,18 +47,21 @@ export default function HeroBanner({settings}: HeroBannerProps) {
 
           {settings.socialLinks && settings.socialLinks.length > 0 && (
             <div className="flex gap-3 mb-8">
-              {settings.socialLinks.map((link) => (
-                <a
-                  key={link._key}
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-11 h-11 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:text-black hover:border-black transition-colors"
-                  aria-label={link.platform}
-                >
-                  {socialIcons[link.platform]}
-                </a>
-              ))}
+              {settings.socialLinks.map((link) => {
+                const platform = stegaClean(link.platform)
+                return (
+                  <a
+                    key={link._key}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-11 h-11 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:text-black hover:border-black transition-colors"
+                    aria-label={platform}
+                  >
+                    {socialIcons[platform]}
+                  </a>
+                )
+              })}
             </div>
           )}
 

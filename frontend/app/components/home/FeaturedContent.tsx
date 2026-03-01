@@ -1,9 +1,27 @@
 'use client'
 
-import Script from 'next/script'
+import {useEffect, useRef} from 'react'
 import SectionHeading from './SectionHeading'
 
 export default function FeaturedContent() {
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const script = document.createElement('script')
+    script.src = 'https://platform.twitter.com/widgets.js'
+    script.async = true
+    script.onload = () => {
+      if (window.twttr?.widgets) {
+        window.twttr.widgets.load(containerRef.current)
+      }
+    }
+    document.body.appendChild(script)
+
+    return () => {
+      document.body.removeChild(script)
+    }
+  }, [])
+
   return (
     <section className="py-16 sm:py-24 bg-gray-50">
       <div className="container">
@@ -33,7 +51,7 @@ export default function FeaturedContent() {
             </a>
           </div>
 
-          <div className="max-w-2xl">
+          <div ref={containerRef} className="max-w-2xl">
             <a
               className="twitter-timeline"
               data-height="600"
@@ -43,13 +61,19 @@ export default function FeaturedContent() {
             >
               Loading posts from @benuoa...
             </a>
-            <Script
-              src="https://platform.twitter.com/widgets.js"
-              strategy="lazyOnload"
-            />
           </div>
         </div>
       </div>
     </section>
   )
+}
+
+declare global {
+  interface Window {
+    twttr?: {
+      widgets: {
+        load: (el?: Element | null) => void
+      }
+    }
+  }
 }

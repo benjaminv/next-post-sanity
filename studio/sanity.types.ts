@@ -192,9 +192,19 @@ export type Settings = {
   profileTitle?: string
   topics?: Array<{
     name: string
+    color?: Color
     _type: 'topic'
     _key: string
   }>
+}
+
+export type Color = {
+  _type: 'color'
+  hex?: string
+  alpha?: number
+  hsl?: HslaColor
+  hsv?: HsvaColor
+  rgb?: RgbaColor
 }
 
 export type SanityImageCrop = {
@@ -424,6 +434,30 @@ export type SanityAssistSchemaTypeField = {
   >
 }
 
+export type RgbaColor = {
+  _type: 'rgbaColor'
+  r?: number
+  g?: number
+  b?: number
+  a?: number
+}
+
+export type HsvaColor = {
+  _type: 'hsvaColor'
+  h?: number
+  s?: number
+  v?: number
+  a?: number
+}
+
+export type HslaColor = {
+  _type: 'hslaColor'
+  h?: number
+  s?: number
+  l?: number
+  a?: number
+}
+
 export type SanityImagePaletteSwatch = {
   _type: 'sanity.imagePaletteSwatch'
   background?: string
@@ -531,6 +565,7 @@ export type AllSanitySchemaTypes =
   | BlockContent
   | Button
   | Settings
+  | Color
   | SanityImageCrop
   | SanityImageHotspot
   | Page
@@ -551,6 +586,9 @@ export type AllSanitySchemaTypes =
   | SanityAssistInstructionFieldRef
   | SanityAssistInstruction
   | SanityAssistSchemaTypeField
+  | RgbaColor
+  | HsvaColor
+  | HslaColor
   | SanityImagePaletteSwatch
   | SanityImagePalette
   | SanityImageDimensions
