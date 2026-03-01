@@ -47,7 +47,7 @@ export default function AboutMe({settings}: AboutMeProps) {
             {settings.topics && settings.topics.length > 0 && (
               <>
                 <hr className="border-gray-200 mb-6" />
-                <h3 className="font-bold text-lg mb-4">What I Write About</h3>
+                <h3 className="font-bold text-lg mb-4">Topics</h3>
                 <div className="flex flex-wrap gap-2">
                   {settings.topics.map((topic, index) => {
                     const hex = topic.color?.hex

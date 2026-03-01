@@ -68,11 +68,11 @@ function PostCard({post}: {post: AllPostsQueryResult[number]}) {
   )
 }
 
-type LatestWritingProps = {
+type LatestPostsProps = {
   posts: AllPostsQueryResult
 }
 
-export default function LatestWriting({posts}: LatestWritingProps) {
+export default function LatestPosts({posts}: LatestPostsProps) {
   if (!posts || posts.length === 0) return null
 
   const displayPosts = posts.slice(0, 4)
@@ -82,7 +82,7 @@ export default function LatestWriting({posts}: LatestWritingProps) {
       <div className="container">
         <SectionHeading
           eyebrow="Articles and Tutorials"
-          heading="Latest Writing"
+          heading="Latest Posts"
           description="Thoughts on product, code, and the space in between."
           action={{label: 'View all', href: '/posts'}}
         />

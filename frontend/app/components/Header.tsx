@@ -23,6 +23,11 @@ export default async function Header() {
               className="flex items-center gap-4 md:gap-6 leading-5 text-xs sm:text-base tracking-tight font-mono"
             >
               <li>
+                <Link href="/posts" className="hover:underline">
+                  Blog
+                </Link>
+              </li>
+              <li>
                 <Link href="/about" className="hover:underline">
                   About
                 </Link>
