@@ -2,6 +2,8 @@ import {defineQuery} from 'next-sanity'
 
 export const settingsQuery = defineQuery(`*[_type == "settings"][0]{
   ...,
+  heroSubheading,
+  heroHeading,
   heroIntro,
   statusLine,
   socialLinks,
@@ -100,6 +102,21 @@ export const postQuery = defineQuery(`
     ${postFields}
   }
 `)
+
+export const adjacentPostsQuery = defineQuery(`{
+  "prev": *[_type == "post" && defined(slug.current) && (
+    date > $date || (date == $date && _updatedAt > $updatedAt)
+  )] | order(date asc, _updatedAt asc) [0] {
+    "title": coalesce(title, "Untitled"),
+    "slug": slug.current
+  },
+  "next": *[_type == "post" && defined(slug.current) && (
+    date < $date || (date == $date && _updatedAt < $updatedAt)
+  )] | order(date desc, _updatedAt desc) [0] {
+    "title": coalesce(title, "Untitled"),
+    "slug": slug.current
+  }
+}`)
 
 export const postPagesSlugs = defineQuery(`
   *[_type == "post" && defined(slug.current)]

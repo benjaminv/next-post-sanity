@@ -35,9 +35,13 @@ export default function HeroBanner({settings}: HeroBannerProps) {
     <section className="relative bg-gradient-to-b from-mint to-white">
       <div className="container">
         <div className="max-w-3xl pt-32 sm:pt-40 lg:pt-48 pb-16 sm:pb-24 lg:pb-32">
-          <p className="text-brand font-mono text-sm uppercase tracking-wider mb-4">Hello, I&apos;m</p>
+          {settings.heroSubheading && (
+            <p className="text-brand font-mono text-sm uppercase tracking-wider mb-4">
+              {settings.heroSubheading}
+            </p>
+          )}
           <h1 className="font-[family-name:var(--font-playfair)] text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-black mb-6">
-            {settings.title}
+            {settings.heroHeading || settings.title}
           </h1>
           {settings.heroIntro && (
             <p className="text-gray-500 text-lg sm:text-xl leading-relaxed max-w-xl mb-8">

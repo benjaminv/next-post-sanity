@@ -47,18 +47,20 @@ export default async function BlogLayout({children}: {children: React.ReactNode}
   const {isEnabled: isDraftMode} = await draftMode()
 
   return (
-    <section className="min-h-screen">
+    <>
       <Toaster />
-      {isDraftMode && (
-        <>
-          <DraftModeToast />
-          <VisualEditing />
-        </>
-      )}
-      <SanityLive onError={handleError} />
-      <Header />
-      <main>{children}</main>
-      <Footer />
-    </section>
+      <section className="min-h-screen">
+        {isDraftMode && (
+          <>
+            <DraftModeToast />
+            <VisualEditing />
+          </>
+        )}
+        <SanityLive onError={handleError} />
+        <Header />
+        <main>{children}</main>
+        <Footer />
+      </section>
+    </>
   )
 }

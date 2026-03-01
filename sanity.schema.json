@@ -1102,6 +1102,20 @@
         },
         "optional": true
       },
+      "heroSubheading": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "heroHeading": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": false
+      },
       "heroIntro": {
         "type": "objectAttribute",
         "value": {

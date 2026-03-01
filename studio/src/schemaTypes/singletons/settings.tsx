@@ -167,6 +167,22 @@ export const settings = defineType({
 
     // ── Homepage ──
     defineField({
+      name: 'heroSubheading',
+      title: 'Hero Subheading',
+      description: 'Small text above the large name, e.g. "HELLO, I\'M"',
+      type: 'string',
+      group: 'homepage',
+      initialValue: "HELLO, I'M",
+    }),
+    defineField({
+      name: 'heroHeading',
+      title: 'Hero Heading',
+      description: 'The large name displayed on the homepage hero.',
+      type: 'string',
+      group: 'homepage',
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
       name: 'heroIntro',
       title: 'Hero Introduction',
       description: 'The intro paragraph displayed under your name on the homepage.',
