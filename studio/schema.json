@@ -1178,6 +1178,16 @@
         },
         "optional": true
       },
+      "featuredTweets": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "array",
+          "of": {
+            "type": "string"
+          }
+        },
+        "optional": true
+      },
       "aboutBio": {
         "type": "objectAttribute",
         "value": {

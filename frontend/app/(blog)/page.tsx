@@ -1,6 +1,6 @@
 import HeroBanner from '@/app/components/home/HeroBanner'
 import LatestPosts from '@/app/components/home/LatestPosts'
-import FeaturedContent from '@/app/components/home/FeaturedContent'
+import RecentTweets from '@/app/components/home/RecentTweets'
 import AboutMe from '@/app/components/home/AboutMe'
 import {settingsQuery, allPostsQuery} from '@/sanity/lib/queries'
 import {sanityFetch} from '@/sanity/lib/live'
@@ -15,7 +15,7 @@ export default async function Page() {
     <>
       <HeroBanner settings={settings} />
       <LatestPosts posts={posts} />
-      <FeaturedContent />
+      <RecentTweets settings={settings} />
       <AboutMe settings={settings} />
     </>
   )

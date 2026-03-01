@@ -171,6 +171,7 @@ export type Settings = {
     _type: 'socialLink'
     _key: string
   }>
+  featuredTweets?: Array<string>
   aboutBio?: Array<{
     children?: Array<{
       marks?: Array<string>
@@ -602,7 +603,7 @@ export declare const internalGroqTypeReferenceTo: unique symbol
 
 // Source: sanity/lib/queries.ts
 // Variable: settingsQuery
-// Query: *[_type == "settings"][0]{  ...,  heroIntro,  statusLine,  socialLinks,  aboutBio,  profileTitle,  topics}
+// Query: *[_type == "settings"][0]{  ...,  heroIntro,  statusLine,  socialLinks,  aboutBio,  profileTitle,  topics,  featuredTweets}
 export type SettingsQueryResult = {
   _id: string
   _type: 'settings'
@@ -649,6 +650,7 @@ export type SettingsQueryResult = {
     _type: 'socialLink'
     _key: string
   }> | null
+  featuredTweets: Array<string> | null
   aboutBio: Array<{
     children?: Array<{
       marks?: Array<string>
@@ -926,7 +928,7 @@ export type PagesSlugsResult = Array<{
 import '@sanity/client'
 declare module '@sanity/client' {
   interface SanityQueries {
-    '*[_type == "settings"][0]{\n  ...,\n  heroIntro,\n  statusLine,\n  socialLinks,\n  aboutBio,\n  profileTitle,\n  topics\n}': SettingsQueryResult
+    '*[_type == "settings"][0]{\n  ...,\n  heroIntro,\n  statusLine,\n  socialLinks,\n  aboutBio,\n  profileTitle,\n  topics,\n  featuredTweets\n}': SettingsQueryResult
     '\n  *[_type == \'page\' && slug.current == $slug][0]{\n    _id,\n    _type,\n    name,\n    slug,\n    heading,\n    subheading,\n    "pageBuilder": pageBuilder[]{\n      ...,\n      _type == "callToAction" => {\n        ...,\n        button {\n          ...,\n          \n  link {\n      ...,\n      \n  _type == "link" => {\n    "page": page->slug.current,\n    "post": post->slug.current\n  }\n\n      }\n\n        }\n      },\n      _type == "infoSection" => {\n        content[]{\n          ...,\n          markDefs[]{\n            ...,\n            \n  _type == "link" => {\n    "page": page->slug.current,\n    "post": post->slug.current\n  }\n\n          }\n        }\n      },\n    },\n  }\n': GetPageQueryResult
     '\n  *[_type == "page" || _type == "post" && defined(slug.current)] | order(_type asc) {\n    "slug": slug.current,\n    _type,\n    _updatedAt,\n  }\n': SitemapDataResult
     '\n  *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  tags,\n  "readTime": round(length(pt::text(content)) / 5 / 200),\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture},\n\n  }\n': AllPostsQueryResult

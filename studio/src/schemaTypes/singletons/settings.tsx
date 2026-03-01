@@ -220,6 +220,25 @@ export const settings = defineType({
       ],
     }),
 
+    defineField({
+      name: 'featuredTweets',
+      title: 'Featured Tweets',
+      description: 'Paste tweet URLs to embed on the homepage. e.g. https://x.com/Benuoa/status/123456789',
+      type: 'array',
+      group: 'homepage',
+      of: [
+        defineArrayMember({
+          type: 'url',
+          validation: (rule) =>
+            rule.uri({scheme: ['https']}).custom((url) => {
+              if (!url) return true
+              if (/^https:\/\/(x\.com|twitter\.com)\/.+\/status\/\d+/.test(url)) return true
+              return 'Must be a tweet URL (https://x.com/user/status/...)'
+            }),
+        }),
+      ],
+    }),
+
     // ── About ──
     defineField({
       name: 'aboutBio',
