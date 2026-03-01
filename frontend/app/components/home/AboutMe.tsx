@@ -31,6 +31,11 @@ type AboutMeProps = {
 export default function AboutMe({settings}: AboutMeProps) {
   if (!settings) return null
 
+  const author = settings.profileAuthor as {
+    firstName: string | null
+    lastName: string | null
+  } | null
+
   return (
     <section className="py-16 sm:py-24">
       <div className="container">
@@ -74,16 +79,16 @@ export default function AboutMe({settings}: AboutMeProps) {
             <div className="bg-gray-50 rounded-xl p-8 text-center">
               <div className="w-24 h-24 rounded-full bg-gradient-to-br from-emerald-300 to-teal-500 flex items-center justify-center mx-auto mb-4">
                 <span className="text-white text-2xl font-bold">
-                  {settings.profileAuthor
-                    ? getInitials(`${settings.profileAuthor.firstName ?? ''} ${settings.profileAuthor.lastName ?? ''}`)
+                  {author
+                    ? getInitials(`${author.firstName ?? ''} ${author.lastName ?? ''}`)
                     : settings.title
                       ? getInitials(settings.title)
                       : '?'}
                 </span>
               </div>
               <h3 className="font-bold text-xl mb-1">
-                {settings.profileAuthor
-                  ? `${settings.profileAuthor.firstName} ${settings.profileAuthor.lastName}`
+                {author
+                  ? `${author.firstName} ${author.lastName}`
                   : settings.title}
               </h3>
               {settings.profileTitle && (

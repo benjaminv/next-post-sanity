@@ -8,7 +8,7 @@ export const settingsQuery = defineQuery(`*[_type == "settings"][0]{
   statusLine,
   socialLinks,
   aboutBio,
-  "profileAuthor": profileAuthor->{firstName, lastName, picture},
+  profileAuthor->{firstName, lastName, picture},
   profileTitle,
   profileTagline,
   topics,
