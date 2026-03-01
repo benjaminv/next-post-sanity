@@ -163,6 +163,48 @@ export type Settings = {
     metadataBase?: string
     _type: 'image'
   }
+  heroIntro?: string
+  statusLine?: string
+  socialLinks?: Array<{
+    platform: 'twitter' | 'github' | 'linkedin' | 'youtube'
+    url: string
+    _type: 'socialLink'
+    _key: string
+  }>
+  aboutBio?: Array<{
+    children?: Array<{
+      marks?: Array<string>
+      text?: string
+      _type: 'span'
+      _key: string
+    }>
+    style?: 'normal'
+    listItem?: never
+    markDefs?: Array<{
+      href?: string
+      _type: 'link'
+      _key: string
+    }>
+    level?: number
+    _type: 'block'
+    _key: string
+  }>
+  profileTitle?: string
+  topics?: Array<{
+    name: string
+    color?: Color
+    _type: 'topic'
+    _key: string
+  }>
+}
+
+export type Color = {
+  _type: 'color'
+  hex?: string
+  alpha?: number
+  hsl?: HslaColor
+  hsv?: HsvaColor
+  rgb?: RgbaColor
 }
 
 export type SanityImageCrop = {
@@ -218,6 +260,7 @@ export type Post = {
   slug: Slug
   content?: BlockContent
   excerpt?: string
+  tags?: Array<string>
   coverImage?: {
     asset?: SanityImageAssetReference
     media?: unknown
@@ -391,6 +434,30 @@ export type SanityAssistSchemaTypeField = {
   >
 }
 
+export type RgbaColor = {
+  _type: 'rgbaColor'
+  r?: number
+  g?: number
+  b?: number
+  a?: number
+}
+
+export type HsvaColor = {
+  _type: 'hsvaColor'
+  h?: number
+  s?: number
+  v?: number
+  a?: number
+}
+
+export type HslaColor = {
+  _type: 'hslaColor'
+  h?: number
+  s?: number
+  l?: number
+  a?: number
+}
+
 export type SanityImagePaletteSwatch = {
   _type: 'sanity.imagePaletteSwatch'
   background?: string
@@ -498,6 +565,7 @@ export type AllSanitySchemaTypes =
   | BlockContent
   | Button
   | Settings
+  | Color
   | SanityImageCrop
   | SanityImageHotspot
   | Page
@@ -518,6 +586,9 @@ export type AllSanitySchemaTypes =
   | SanityAssistInstructionFieldRef
   | SanityAssistInstruction
   | SanityAssistSchemaTypeField
+  | RgbaColor
+  | HsvaColor
+  | HslaColor
   | SanityImagePaletteSwatch
   | SanityImagePalette
   | SanityImageDimensions

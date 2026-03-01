@@ -1,6 +1,19 @@
 import {defineQuery} from 'next-sanity'
 
-export const settingsQuery = defineQuery(`*[_type == "settings"][0]`)
+export const settingsQuery = defineQuery(`*[_type == "settings"][0]{
+  ...,
+  heroSubheading,
+  heroHeading,
+  heroIntro,
+  statusLine,
+  socialLinks,
+  aboutBio,
+  profileAuthor->{firstName, lastName, picture},
+  profileTitle,
+  profileTagline,
+  topics,
+  featuredTweets
+}`)
 
 const postFields = /* groq */ `
   _id,
@@ -8,6 +21,8 @@ const postFields = /* groq */ `
   "title": coalesce(title, "Untitled"),
   "slug": slug.current,
   excerpt,
+  tags,
+  "readTime": round(length(pt::text(content)) / 5 / 200),
   coverImage,
   "date": coalesce(date, _updatedAt),
   "author": author->{firstName, lastName, picture},
@@ -89,6 +104,21 @@ export const postQuery = defineQuery(`
     ${postFields}
   }
 `)
+
+export const adjacentPostsQuery = defineQuery(`{
+  "prev": *[_type == "post" && _id != $id && defined(slug.current) && (
+    date > $date || (date == $date && _updatedAt > $updatedAt)
+  )] | order(date asc, _updatedAt asc) [0] {
+    "title": coalesce(title, "Untitled"),
+    "slug": slug.current
+  },
+  "next": *[_type == "post" && _id != $id && defined(slug.current) && (
+    date < $date || (date == $date && _updatedAt < $updatedAt)
+  )] | order(date desc, _updatedAt desc) [0] {
+    "title": coalesce(title, "Untitled"),
+    "slug": slug.current
+  }
+}`)
 
 export const postPagesSlugs = defineQuery(`
   *[_type == "post" && defined(slug.current)]

@@ -47,5 +47,10 @@
   --color-gray-900: #1b1d27;
   --color-gray-950: #13141b;
 
+  --color-mint: #e0f2ec;
+  --color-mint-light: #f0faf6;
+
+  --font-playfair: var(--font-playfair);
+
   --default-transition-duration: 250ms;
 }

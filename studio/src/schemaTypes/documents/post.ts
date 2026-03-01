@@ -43,6 +43,16 @@ export const post = defineType({
       type: 'text',
     }),
     defineField({
+      name: 'tags',
+      title: 'Tags',
+      description: 'Decorative tags displayed on post cards.',
+      type: 'array',
+      of: [{type: 'string'}],
+      options: {
+        layout: 'tags',
+      },
+    }),
+    defineField({
       name: 'coverImage',
       title: 'Cover Image',
       type: 'image',

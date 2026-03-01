@@ -163,6 +163,51 @@ export type Settings = {
     metadataBase?: string
     _type: 'image'
   }
+  heroSubheading?: string
+  heroHeading: string
+  heroIntro?: string
+  statusLine?: string
+  socialLinks?: Array<{
+    platform: 'twitter' | 'github' | 'linkedin' | 'youtube'
+    url: string
+    _type: 'socialLink'
+    _key: string
+  }>
+  featuredTweets?: Array<string>
+  aboutBio?: Array<{
+    children?: Array<{
+      marks?: Array<string>
+      text?: string
+      _type: 'span'
+      _key: string
+    }>
+    style?: 'normal'
+    listItem?: never
+    markDefs?: Array<{
+      href?: string
+      _type: 'link'
+      _key: string
+    }>
+    level?: number
+    _type: 'block'
+    _key: string
+  }>
+  profileTitle?: string
+  topics?: Array<{
+    name: string
+    color?: Color
+    _type: 'topic'
+    _key: string
+  }>
+}
+
+export type Color = {
+  _type: 'color'
+  hex?: string
+  alpha?: number
+  hsl?: HslaColor
+  hsv?: HsvaColor
+  rgb?: RgbaColor
 }
 
 export type SanityImageCrop = {
@@ -218,6 +263,7 @@ export type Post = {
   slug: Slug
   content?: BlockContent
   excerpt?: string
+  tags?: Array<string>
   coverImage?: {
     asset?: SanityImageAssetReference
     media?: unknown
@@ -391,6 +437,30 @@ export type SanityAssistSchemaTypeField = {
   >
 }
 
+export type RgbaColor = {
+  _type: 'rgbaColor'
+  r?: number
+  g?: number
+  b?: number
+  a?: number
+}
+
+export type HsvaColor = {
+  _type: 'hsvaColor'
+  h?: number
+  s?: number
+  v?: number
+  a?: number
+}
+
+export type HslaColor = {
+  _type: 'hslaColor'
+  h?: number
+  s?: number
+  l?: number
+  a?: number
+}
+
 export type SanityImagePaletteSwatch = {
   _type: 'sanity.imagePaletteSwatch'
   background?: string
@@ -498,6 +568,7 @@ export type AllSanitySchemaTypes =
   | BlockContent
   | Button
   | Settings
+  | Color
   | SanityImageCrop
   | SanityImageHotspot
   | Page
@@ -518,6 +589,9 @@ export type AllSanitySchemaTypes =
   | SanityAssistInstructionFieldRef
   | SanityAssistInstruction
   | SanityAssistSchemaTypeField
+  | RgbaColor
+  | HsvaColor
+  | HslaColor
   | SanityImagePaletteSwatch
   | SanityImagePalette
   | SanityImageDimensions
@@ -531,7 +605,7 @@ export declare const internalGroqTypeReferenceTo: unique symbol
 
 // Source: sanity/lib/queries.ts
 // Variable: settingsQuery
-// Query: *[_type == "settings"][0]
+// Query: *[_type == "settings"][0]{  ...,  heroSubheading,  heroHeading,  heroIntro,  statusLine,  socialLinks,  aboutBio,  profileAuthor->{firstName, lastName, picture},  profileTitle,  profileTagline,  topics,  featuredTweets}
 export type SettingsQueryResult = {
   _id: string
   _type: 'settings'
@@ -570,6 +644,44 @@ export type SettingsQueryResult = {
     metadataBase?: string
     _type: 'image'
   }
+  heroSubheading: string | null
+  heroHeading: string
+  heroIntro: string | null
+  statusLine: string | null
+  socialLinks: Array<{
+    platform: 'github' | 'linkedin' | 'twitter' | 'youtube'
+    url: string
+    _type: 'socialLink'
+    _key: string
+  }> | null
+  featuredTweets: Array<string> | null
+  aboutBio: Array<{
+    children?: Array<{
+      marks?: Array<string>
+      text?: string
+      _type: 'span'
+      _key: string
+    }>
+    style?: 'normal'
+    listItem?: never
+    markDefs?: Array<{
+      href?: string
+      _type: 'link'
+      _key: string
+    }>
+    level?: number
+    _type: 'block'
+    _key: string
+  }> | null
+  profileTitle: string | null
+  topics: Array<{
+    name: string
+    color?: Color
+    _type: 'topic'
+    _key: string
+  }> | null
+  profileAuthor: null
+  profileTagline: null
 } | null
 
 // Source: sanity/lib/queries.ts
@@ -671,13 +783,15 @@ export type SitemapDataResult = Array<
 
 // Source: sanity/lib/queries.ts
 // Variable: allPostsQuery
-// Query: *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) {      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  coverImage,  "date": coalesce(date, _updatedAt),  "author": author->{firstName, lastName, picture},  }
+// Query: *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) {      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  tags,  "readTime": round(length(pt::text(content)) / 5 / 200),  coverImage,  "date": coalesce(date, _updatedAt),  "author": author->{firstName, lastName, picture},  }
 export type AllPostsQueryResult = Array<{
   _id: string
   status: 'draft' | 'published'
   title: string
   slug: string
   excerpt: string | null
+  tags: Array<string> | null
+  readTime: number
   coverImage: {
     asset?: SanityImageAssetReference
     media?: unknown
@@ -703,13 +817,15 @@ export type AllPostsQueryResult = Array<{
 
 // Source: sanity/lib/queries.ts
 // Variable: morePostsQuery
-// Query: *[_type == "post" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  coverImage,  "date": coalesce(date, _updatedAt),  "author": author->{firstName, lastName, picture},  }
+// Query: *[_type == "post" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  tags,  "readTime": round(length(pt::text(content)) / 5 / 200),  coverImage,  "date": coalesce(date, _updatedAt),  "author": author->{firstName, lastName, picture},  }
 export type MorePostsQueryResult = Array<{
   _id: string
   status: 'draft' | 'published'
   title: string
   slug: string
   excerpt: string | null
+  tags: Array<string> | null
+  readTime: number
   coverImage: {
     asset?: SanityImageAssetReference
     media?: unknown
@@ -735,7 +851,7 @@ export type MorePostsQueryResult = Array<{
 
 // Source: sanity/lib/queries.ts
 // Variable: postQuery
-// Query: *[_type == "post" && slug.current == $slug] [0] {    content[]{    ...,    markDefs[]{      ...,        _type == "link" => {    "page": page->slug.current,    "post": post->slug.current  }    }  },      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  coverImage,  "date": coalesce(date, _updatedAt),  "author": author->{firstName, lastName, picture},  }
+// Query: *[_type == "post" && slug.current == $slug] [0] {    content[]{    ...,    markDefs[]{      ...,        _type == "link" => {    "page": page->slug.current,    "post": post->slug.current  }    }  },      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  tags,  "readTime": round(length(pt::text(content)) / 5 / 200),  coverImage,  "date": coalesce(date, _updatedAt),  "author": author->{firstName, lastName, picture},  }
 export type PostQueryResult = {
   content: Array<
     | {
@@ -775,6 +891,8 @@ export type PostQueryResult = {
   title: string
   slug: string
   excerpt: string | null
+  tags: Array<string> | null
+  readTime: number
   coverImage: {
     asset?: SanityImageAssetReference
     media?: unknown
@@ -799,6 +917,20 @@ export type PostQueryResult = {
 } | null
 
 // Source: sanity/lib/queries.ts
+// Variable: adjacentPostsQuery
+// Query: {  "prev": *[_type == "post" && _id != $id && defined(slug.current) && (    date > $date || (date == $date && _updatedAt > $updatedAt)  )] | order(date asc, _updatedAt asc) [0] {    "title": coalesce(title, "Untitled"),    "slug": slug.current  },  "next": *[_type == "post" && _id != $id && defined(slug.current) && (    date < $date || (date == $date && _updatedAt < $updatedAt)  )] | order(date desc, _updatedAt desc) [0] {    "title": coalesce(title, "Untitled"),    "slug": slug.current  }}
+export type AdjacentPostsQueryResult = {
+  prev: {
+    title: string
+    slug: string
+  } | null
+  next: {
+    title: string
+    slug: string
+  } | null
+}
+
+// Source: sanity/lib/queries.ts
 // Variable: postPagesSlugs
 // Query: *[_type == "post" && defined(slug.current)]  {"slug": slug.current}
 export type PostPagesSlugsResult = Array<{
@@ -816,12 +948,13 @@ export type PagesSlugsResult = Array<{
 import '@sanity/client'
 declare module '@sanity/client' {
   interface SanityQueries {
-    '*[_type == "settings"][0]': SettingsQueryResult
+    '*[_type == "settings"][0]{\n  ...,\n  heroSubheading,\n  heroHeading,\n  heroIntro,\n  statusLine,\n  socialLinks,\n  aboutBio,\n  profileAuthor->{firstName, lastName, picture},\n  profileTitle,\n  profileTagline,\n  topics,\n  featuredTweets\n}': SettingsQueryResult
     '\n  *[_type == \'page\' && slug.current == $slug][0]{\n    _id,\n    _type,\n    name,\n    slug,\n    heading,\n    subheading,\n    "pageBuilder": pageBuilder[]{\n      ...,\n      _type == "callToAction" => {\n        ...,\n        button {\n          ...,\n          \n  link {\n      ...,\n      \n  _type == "link" => {\n    "page": page->slug.current,\n    "post": post->slug.current\n  }\n\n      }\n\n        }\n      },\n      _type == "infoSection" => {\n        content[]{\n          ...,\n          markDefs[]{\n            ...,\n            \n  _type == "link" => {\n    "page": page->slug.current,\n    "post": post->slug.current\n  }\n\n          }\n        }\n      },\n    },\n  }\n': GetPageQueryResult
     '\n  *[_type == "page" || _type == "post" && defined(slug.current)] | order(_type asc) {\n    "slug": slug.current,\n    _type,\n    _updatedAt,\n  }\n': SitemapDataResult
-    '\n  *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture},\n\n  }\n': AllPostsQueryResult
-    '\n  *[_type == "post" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture},\n\n  }\n': MorePostsQueryResult
-    '\n  *[_type == "post" && slug.current == $slug] [0] {\n    content[]{\n    ...,\n    markDefs[]{\n      ...,\n      \n  _type == "link" => {\n    "page": page->slug.current,\n    "post": post->slug.current\n  }\n\n    }\n  },\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture},\n\n  }\n': PostQueryResult
+    '\n  *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  tags,\n  "readTime": round(length(pt::text(content)) / 5 / 200),\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture},\n\n  }\n': AllPostsQueryResult
+    '\n  *[_type == "post" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  tags,\n  "readTime": round(length(pt::text(content)) / 5 / 200),\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture},\n\n  }\n': MorePostsQueryResult
+    '\n  *[_type == "post" && slug.current == $slug] [0] {\n    content[]{\n    ...,\n    markDefs[]{\n      ...,\n      \n  _type == "link" => {\n    "page": page->slug.current,\n    "post": post->slug.current\n  }\n\n    }\n  },\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  tags,\n  "readTime": round(length(pt::text(content)) / 5 / 200),\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture},\n\n  }\n': PostQueryResult
+    '{\n  "prev": *[_type == "post" && _id != $id && defined(slug.current) && (\n    date > $date || (date == $date && _updatedAt > $updatedAt)\n  )] | order(date asc, _updatedAt asc) [0] {\n    "title": coalesce(title, "Untitled"),\n    "slug": slug.current\n  },\n  "next": *[_type == "post" && _id != $id && defined(slug.current) && (\n    date < $date || (date == $date && _updatedAt < $updatedAt)\n  )] | order(date desc, _updatedAt desc) [0] {\n    "title": coalesce(title, "Untitled"),\n    "slug": slug.current\n  }\n}': AdjacentPostsQueryResult
     '\n  *[_type == "post" && defined(slug.current)]\n  {"slug": slug.current}\n': PostPagesSlugsResult
     '\n  *[_type == "page" && defined(slug.current)]\n  {"slug": slug.current}\n': PagesSlugsResult
   }
