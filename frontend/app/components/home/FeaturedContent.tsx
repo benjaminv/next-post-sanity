@@ -1,25 +1,74 @@
 'use client'
 
-import {useEffect, useRef} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import SectionHeading from './SectionHeading'
 
 export default function FeaturedContent() {
   const containerRef = useRef<HTMLDivElement>(null)
+  const [failed, setFailed] = useState(false)
 
   useEffect(() => {
+    if (!containerRef.current) return
+
+    const el = containerRef.current
+
+    function createTimeline() {
+      if (!window.twttr?.widgets?.createTimeline) return
+      // Clear any previous content
+      el.innerHTML = ''
+      window.twttr.widgets
+        .createTimeline(
+          {sourceType: 'profile', screenName: 'Benuoa'},
+          el,
+          {height: 600, chrome: 'noheader nofooter noborders transparent', theme: 'light'},
+        )
+        .catch(() => setFailed(true))
+    }
+
+    // If twttr is already loaded (e.g. hot reload), use it directly
+    if (window.twttr?.widgets?.createTimeline) {
+      createTimeline()
+      return
+    }
+
+    // Otherwise load the script
+    const existing = document.querySelector('script[src="https://platform.twitter.com/widgets.js"]')
+    if (existing) {
+      // Script tag exists but may still be loading — poll for readiness
+      const interval = setInterval(() => {
+        if (window.twttr?.widgets?.createTimeline) {
+          clearInterval(interval)
+          createTimeline()
+        }
+      }, 200)
+      const timeout = setTimeout(() => {
+        clearInterval(interval)
+        setFailed(true)
+      }, 10000)
+      return () => {
+        clearInterval(interval)
+        clearTimeout(timeout)
+      }
+    }
+
     const script = document.createElement('script')
     script.src = 'https://platform.twitter.com/widgets.js'
     script.async = true
     script.onload = () => {
-      if (window.twttr?.widgets) {
-        window.twttr.widgets.load(containerRef.current)
-      }
+      // widgets.js sets up twttr.widgets asynchronously after script load
+      const interval = setInterval(() => {
+        if (window.twttr?.widgets?.createTimeline) {
+          clearInterval(interval)
+          createTimeline()
+        }
+      }, 100)
+      setTimeout(() => {
+        clearInterval(interval)
+        if (!window.twttr?.widgets?.createTimeline) setFailed(true)
+      }, 5000)
     }
+    script.onerror = () => setFailed(true)
     document.body.appendChild(script)
-
-    return () => {
-      document.body.removeChild(script)
-    }
   }, [])
 
   return (
@@ -51,16 +100,20 @@ export default function FeaturedContent() {
             </a>
           </div>
 
-          <div ref={containerRef} className="max-w-2xl">
-            <a
-              className="twitter-timeline"
-              data-height="600"
-              data-theme="light"
-              data-chrome="noheader nofooter noborders transparent"
-              href="https://twitter.com/Benuoa"
-            >
-              Loading posts from @benuoa...
-            </a>
+          <div ref={containerRef} className="max-w-2xl min-h-50">
+            {failed && (
+              <div className="text-gray-400 text-sm font-mono py-8">
+                Could not load timeline.{' '}
+                <a
+                  href="https://x.com/Benuoa"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-brand hover:underline"
+                >
+                  View on X &rarr;
+                </a>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -72,6 +125,11 @@ declare global {
   interface Window {
     twttr?: {
       widgets: {
+        createTimeline: (
+          source: {sourceType: string; screenName: string},
+          el: HTMLElement,
+          options?: Record<string, unknown>,
+        ) => Promise<HTMLElement>
         load: (el?: Element | null) => void
       }
     }
