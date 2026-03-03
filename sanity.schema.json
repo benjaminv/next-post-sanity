@@ -1179,6 +1179,13 @@
         },
         "optional": true
       },
+      "googleSiteVerification": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "heroSubheading": {
         "type": "objectAttribute",
         "value": {

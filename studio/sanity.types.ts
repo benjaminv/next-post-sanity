@@ -177,6 +177,7 @@ export type Settings = {
     metadataBase?: string
     _type: 'image'
   }
+  googleSiteVerification?: string
   heroSubheading?: string
   heroHeading: string
   heroIntro?: string

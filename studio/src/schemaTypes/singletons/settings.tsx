@@ -165,6 +165,13 @@ export const settings = defineType({
         }),
       ],
     }),
+    defineField({
+      name: 'googleSiteVerification',
+      title: 'Google Site Verification',
+      description: 'The content value from your Google Search Console meta tag.',
+      type: 'string',
+      group: 'general',
+    }),
 
     // ── Homepage ──
     defineField({

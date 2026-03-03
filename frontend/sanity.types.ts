@@ -177,6 +177,7 @@ export type Settings = {
     metadataBase?: string
     _type: 'image'
   }
+  googleSiteVerification?: string
   heroSubheading?: string
   heroHeading: string
   heroIntro?: string
@@ -677,6 +678,7 @@ export type SettingsQueryResult = {
     metadataBase?: string
     _type: 'image'
   }
+  googleSiteVerification?: string
   heroSubheading: string | null
   heroHeading: string
   heroIntro: string | null

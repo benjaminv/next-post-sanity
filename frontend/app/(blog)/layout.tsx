@@ -40,6 +40,9 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       images: ogImage ? [ogImage] : [],
     },
+    verification: {
+      google: settings?.googleSiteVerification || undefined,
+    },
   }
 }
 
