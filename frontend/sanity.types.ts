@@ -46,7 +46,7 @@ export type SanityImageAssetReference = {
 export type CallToAction = {
   _type: 'callToAction'
   eyebrow?: string
-  heading?: string
+  heading: string
   body?: BlockContentTextOnly
   button?: Button
   image?: {
@@ -145,7 +145,7 @@ export type Settings = {
   _createdAt: string
   _updatedAt: string
   _rev: string
-  title?: string
+  title: string
   description?: Array<{
     children?: Array<{
       marks?: Array<string>
@@ -178,12 +178,12 @@ export type Settings = {
     _type: 'image'
   }
   heroSubheading?: string
-  heroHeading?: string
+  heroHeading: string
   heroIntro?: string
   statusLine?: string
   socialLinks?: Array<{
-    platform?: 'twitter' | 'github' | 'linkedin' | 'youtube'
-    url?: string
+    platform: 'twitter' | 'github' | 'linkedin' | 'youtube'
+    url: string
     _type: 'socialLink'
     _key: string
   }>
@@ -210,7 +210,7 @@ export type Settings = {
   }>
   profileTitle?: string
   topics?: Array<{
-    name?: string
+    name: string
     color?: Color
     _type: 'topic'
     _key: string
@@ -234,8 +234,8 @@ export type Settings = {
     _key: string
   }>
   footerLinks?: Array<{
-    label?: string
-    url?: string
+    label: string
+    url: string
     _type: 'footerLink'
     _key: string
   }>
@@ -252,18 +252,18 @@ export type Color = {
 
 export type SanityImageCrop = {
   _type: 'sanity.imageCrop'
-  top?: number
-  bottom?: number
-  left?: number
-  right?: number
+  top: number
+  bottom: number
+  left: number
+  right: number
 }
 
 export type SanityImageHotspot = {
   _type: 'sanity.imageHotspot'
-  x?: number
-  y?: number
-  height?: number
-  width?: number
+  x: number
+  y: number
+  height: number
+  width: number
 }
 
 export type Page = {
@@ -272,9 +272,9 @@ export type Page = {
   _createdAt: string
   _updatedAt: string
   _rev: string
-  name?: string
-  slug?: Slug
-  heading?: string
+  name: string
+  slug: Slug
+  heading: string
   subheading?: string
   pageBuilder?: Array<
     | ({
@@ -292,8 +292,8 @@ export type Post = {
   _createdAt: string
   _updatedAt: string
   _rev: string
-  title?: string
-  slug?: Slug
+  title: string
+  slug: Slug
   content?: BlockContent
   excerpt?: string
   tags?: Array<string>
@@ -315,9 +315,9 @@ export type Person = {
   _createdAt: string
   _updatedAt: string
   _rev: string
-  firstName?: string
-  lastName?: string
-  picture?: {
+  firstName: string
+  lastName: string
+  picture: {
     asset?: SanityImageAssetReference
     media?: unknown
     hotspot?: SanityImageHotspot
@@ -329,7 +329,7 @@ export type Person = {
 
 export type Slug = {
   _type: 'slug'
-  current?: string
+  current: string
   source?: string
 }
 
@@ -380,7 +380,7 @@ export type AssistInstructionContextReference = {
 
 export type SanityAssistInstructionContext = {
   _type: 'sanity.assist.instruction.context'
-  reference?: AssistInstructionContextReference
+  reference: AssistInstructionContextReference
 }
 
 export type AssistInstructionContext = {
@@ -408,7 +408,7 @@ export type AssistInstructionContext = {
 
 export type SanityAssistInstructionUserInput = {
   _type: 'sanity.assist.instruction.userInput'
-  message?: string
+  message: string
   description?: string
 }
 
@@ -515,9 +515,9 @@ export type SanityImagePalette = {
 
 export type SanityImageDimensions = {
   _type: 'sanity.imageDimensions'
-  height?: number
-  width?: number
-  aspectRatio?: number
+  height: number
+  width: number
+  aspectRatio: number
 }
 
 export type SanityImageMetadata = {
@@ -645,7 +645,7 @@ export type SettingsQueryResult = {
   _createdAt: string
   _updatedAt: string
   _rev: string
-  title?: string
+  title: string
   description?: Array<{
     children?: Array<{
       marks?: Array<string>
@@ -678,19 +678,19 @@ export type SettingsQueryResult = {
     _type: 'image'
   }
   heroSubheading: string | null
-  heroHeading: string | null
+  heroHeading: string
   heroIntro: string | null
   statusLine: string | null
   socialLinks: Array<{
-    platform?: 'github' | 'linkedin' | 'twitter' | 'youtube'
-    url?: string
+    platform: 'github' | 'linkedin' | 'twitter' | 'youtube'
+    url: string
     _type: 'socialLink'
     _key: string
   }> | null
   featuredTweets: Array<string> | null
   profileAuthor: {
-    firstName: string | null
-    lastName: string | null
+    firstName: string
+    lastName: string
     picture: {
       asset?: SanityImageAssetReference
       media?: unknown
@@ -698,7 +698,7 @@ export type SettingsQueryResult = {
       crop?: SanityImageCrop
       alt?: string
       _type: 'image'
-    } | null
+    }
   } | null
   profileTagline: string | null
   aboutBio: Array<{
@@ -721,7 +721,7 @@ export type SettingsQueryResult = {
   }> | null
   profileTitle: string | null
   topics: Array<{
-    name?: string
+    name: string
     color?: Color
     _type: 'topic'
     _key: string
@@ -745,8 +745,8 @@ export type SettingsQueryResult = {
     _key: string
   }> | null
   footerLinks: Array<{
-    label?: string
-    url?: string
+    label: string
+    url: string
     _type: 'footerLink'
     _key: string
   }> | null
@@ -758,16 +758,16 @@ export type SettingsQueryResult = {
 export type GetPageQueryResult = {
   _id: string
   _type: 'page'
-  name: string | null
-  slug: Slug | null
-  heading: string | null
+  name: string
+  slug: Slug
+  heading: string
   subheading: string | null
   pageBuilder: Array<
     | {
         _key: string
         _type: 'callToAction'
         eyebrow?: string
-        heading?: string
+        heading: string
         body?: BlockContentTextOnly
         button: {
           _type: 'button'
@@ -845,12 +845,12 @@ export type GetPageQueryResult = {
 // Query: *[_type == "page" || _type == "post" && defined(slug.current)] | order(_type asc) {    "slug": slug.current,    _type,    _updatedAt,  }
 export type SitemapDataResult = Array<
   | {
-      slug: string | null
+      slug: string
       _type: 'page'
       _updatedAt: string
     }
   | {
-      slug: string | null
+      slug: string
       _type: 'post'
       _updatedAt: string
     }
@@ -862,8 +862,8 @@ export type SitemapDataResult = Array<
 export type AllPostsQueryResult = Array<{
   _id: string
   status: 'draft' | 'published'
-  title: string | 'Untitled'
-  slug: string | null
+  title: string
+  slug: string
   excerpt: string | null
   tags: Array<string> | null
   readTime: number
@@ -877,8 +877,8 @@ export type AllPostsQueryResult = Array<{
   } | null
   date: string
   author: {
-    firstName: string | null
-    lastName: string | null
+    firstName: string
+    lastName: string
     picture: {
       asset?: SanityImageAssetReference
       media?: unknown
@@ -886,7 +886,7 @@ export type AllPostsQueryResult = Array<{
       crop?: SanityImageCrop
       alt?: string
       _type: 'image'
-    } | null
+    }
   } | null
 }>
 
@@ -896,8 +896,8 @@ export type AllPostsQueryResult = Array<{
 export type MorePostsQueryResult = Array<{
   _id: string
   status: 'draft' | 'published'
-  title: string | 'Untitled'
-  slug: string | null
+  title: string
+  slug: string
   excerpt: string | null
   tags: Array<string> | null
   readTime: number
@@ -911,8 +911,8 @@ export type MorePostsQueryResult = Array<{
   } | null
   date: string
   author: {
-    firstName: string | null
-    lastName: string | null
+    firstName: string
+    lastName: string
     picture: {
       asset?: SanityImageAssetReference
       media?: unknown
@@ -920,7 +920,7 @@ export type MorePostsQueryResult = Array<{
       crop?: SanityImageCrop
       alt?: string
       _type: 'image'
-    } | null
+    }
   } | null
 }>
 
@@ -963,8 +963,8 @@ export type PostQueryResult = {
   > | null
   _id: string
   status: 'draft' | 'published'
-  title: string | 'Untitled'
-  slug: string | null
+  title: string
+  slug: string
   excerpt: string | null
   tags: Array<string> | null
   readTime: number
@@ -978,8 +978,8 @@ export type PostQueryResult = {
   } | null
   date: string
   author: {
-    firstName: string | null
-    lastName: string | null
+    firstName: string
+    lastName: string
     picture: {
       asset?: SanityImageAssetReference
       media?: unknown
@@ -987,7 +987,7 @@ export type PostQueryResult = {
       crop?: SanityImageCrop
       alt?: string
       _type: 'image'
-    } | null
+    }
   } | null
 } | null
 
@@ -996,12 +996,12 @@ export type PostQueryResult = {
 // Query: {  "prev": *[_type == "post" && _id != $id && defined(slug.current) && (    date > $date || (date == $date && _updatedAt > $updatedAt)  )] | order(date asc, _updatedAt asc) [0] {    "title": coalesce(title, "Untitled"),    "slug": slug.current  },  "next": *[_type == "post" && _id != $id && defined(slug.current) && (    date < $date || (date == $date && _updatedAt < $updatedAt)  )] | order(date desc, _updatedAt desc) [0] {    "title": coalesce(title, "Untitled"),    "slug": slug.current  }}
 export type AdjacentPostsQueryResult = {
   prev: {
-    title: string | 'Untitled'
-    slug: string | null
+    title: string
+    slug: string
   } | null
   next: {
-    title: string | 'Untitled'
-    slug: string | null
+    title: string
+    slug: string
   } | null
 }
 
@@ -1009,14 +1009,14 @@ export type AdjacentPostsQueryResult = {
 // Variable: postPagesSlugs
 // Query: *[_type == "post" && defined(slug.current)]  {"slug": slug.current}
 export type PostPagesSlugsResult = Array<{
-  slug: string | null
+  slug: string
 }>
 
 // Source: sanity/lib/queries.ts
 // Variable: pagesSlugs
 // Query: *[_type == "page" && defined(slug.current)]  {"slug": slug.current}
 export type PagesSlugsResult = Array<{
-  slug: string | null
+  slug: string
 }>
 
 // Query TypeMap
