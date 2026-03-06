@@ -38,6 +38,17 @@ export const post = defineType({
       type: 'blockContent',
     }),
     defineField({
+      name: 'pageBuilder',
+      title: 'Page builder',
+      type: 'array',
+      of: [
+        {type: 'callToAction'},
+        {type: 'infoSection'},
+        {type: 'richTextBlock'},
+        {type: 'codeBlock'},
+      ],
+    }),
+    defineField({
       name: 'excerpt',
       title: 'Excerpt',
       type: 'text',

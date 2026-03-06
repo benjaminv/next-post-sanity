@@ -1,7 +1,9 @@
 import React from 'react'
 
+import CodeBlock from '@/app/components/CodeBlock'
 import Cta from '@/app/components/Cta'
 import Info from '@/app/components/InfoSection'
+import RichTextBlock from '@/app/components/RichTextBlock'
 import {dataAttr} from '@/sanity/lib/utils'
 import {PageBuilderSection} from '@/sanity/lib/types'
 
@@ -19,17 +21,25 @@ type BlocksType = {
 const Blocks = {
   callToAction: Cta,
   infoSection: Info,
+  richTextBlock: RichTextBlock,
+  codeBlock: CodeBlock,
 } as BlocksType
 
 /**
  * Used by the <PageBuilder>, this component renders a the component that matches the block type.
  */
+// Blocks that manage their own container (e.g. full-width backgrounds)
+const fullWidthBlocks = new Set(['callToAction', 'infoSection'])
+
 export default function BlockRenderer({block, index, pageId, pageType}: BlockProps) {
+  const needsContainer = pageType === 'page' && !fullWidthBlocks.has(block._type)
+
   // Block does exist
   if (typeof Blocks[block._type] !== 'undefined') {
     return (
       <div
         key={block._key}
+        className={needsContainer ? 'container' : ''}
         data-sanity={dataAttr({
           id: pageId,
           type: pageType,

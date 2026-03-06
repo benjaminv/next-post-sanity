@@ -51,7 +51,7 @@ function PostCard({post}: {post: AllPostsQueryResult[number]}) {
         <time className="text-gray-400 text-xs font-mono" dateTime={date}>
           <DateComponent dateString={date} />
         </time>
-        {readTime > 0 && (
+        {(readTime ?? 0) > 0 && (
           <>
             <span className="text-gray-300">&bull;</span>
             <span className="text-gray-400 text-xs font-mono">{readTime} min read</span>

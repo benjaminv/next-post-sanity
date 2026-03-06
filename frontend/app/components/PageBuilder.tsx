@@ -4,12 +4,12 @@ import {SanityDocument} from 'next-sanity'
 import {useOptimistic} from 'next-sanity/hooks'
 
 import BlockRenderer from '@/app/components/BlockRenderer'
-import {GetPageQueryResult} from '@/sanity.types'
 import {dataAttr} from '@/sanity/lib/utils'
-import {PageBuilderSection} from '@/sanity/lib/types'
+import {PageBuilderSection, PageBuilderDocument} from '@/sanity/lib/types'
 
-type PageBuilderPageProps = {
-  page: GetPageQueryResult
+type PageBuilderProps = {
+  page: PageBuilderDocument | null
+  hideEmptyState?: boolean
 }
 
 type PageData = {
@@ -27,13 +27,11 @@ function RenderSections({
   page,
 }: {
   pageBuilderSections: PageBuilderSection[]
-  page: GetPageQueryResult
+  page: PageBuilderDocument
 }) {
-  if (!page) {
-    return null
-  }
   return (
     <div
+      className="min-w-0"
       data-sanity={dataAttr({
         id: page._id,
         type: page._type,
@@ -53,17 +51,13 @@ function RenderSections({
   )
 }
 
-function RenderEmptyState({page}: {page: GetPageQueryResult}) {
-  if (!page) {
-    return null
-  }
-
+function RenderEmptyState({page}: {page: PageBuilderDocument}) {
   return (
     <div
       className="container mt-10"
       data-sanity={dataAttr({
         id: page._id,
-        type: 'page',
+        type: page._type,
         path: `pageBuilder`,
       }).toString()}
     >
@@ -75,34 +69,31 @@ function RenderEmptyState({page}: {page: GetPageQueryResult}) {
   )
 }
 
-export default function PageBuilder({page}: PageBuilderPageProps) {
+export default function PageBuilder({page, hideEmptyState}: PageBuilderProps) {
   const pageBuilderSections = useOptimistic<
     PageBuilderSection[] | undefined,
     SanityDocument<PageData>
   >(page?.pageBuilder || [], (currentSections, action) => {
-    // The action contains updated document data from Sanity
-    // when someone makes an edit in the Studio
-
-    // If the edit was to a different document, ignore it
     if (action.id !== page?._id) {
       return currentSections
     }
 
-    // If there are sections in the updated document, use them
     if (action.document.pageBuilder) {
-      // Reconcile References. https://www.sanity.io/docs/enabling-drag-and-drop#ffe728eea8c1
       return action.document.pageBuilder.map(
         (section) => currentSections?.find((s) => s._key === section?._key) || section,
       )
     }
 
-    // Otherwise keep the current sections
     return currentSections
   })
 
-  return pageBuilderSections && pageBuilderSections.length > 0 ? (
-    <RenderSections pageBuilderSections={pageBuilderSections} page={page} />
-  ) : (
-    <RenderEmptyState page={page} />
-  )
+  if (pageBuilderSections && pageBuilderSections.length > 0) {
+    return <RenderSections pageBuilderSections={pageBuilderSections} page={page!} />
+  }
+
+  if (!hideEmptyState && page) {
+    return <RenderEmptyState page={page} />
+  }
+
+  return null
 }
