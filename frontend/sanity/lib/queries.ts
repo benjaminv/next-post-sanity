@@ -19,12 +19,17 @@ export const settingsQuery = defineQuery(`*[_type == "settings"][0]{
 
 const postFields = /* groq */ `
   _id,
+  _type,
   "status": select(_originalId in path("drafts.**") => "draft", "published"),
   "title": coalesce(title, "Untitled"),
   "slug": slug.current,
   excerpt,
   tags,
-  "readTime": round(length(pt::text(content)) / 5 / 200),
+  "readTime": round((
+    length(pt::text(content)) +
+    length(pt::text(pageBuilder[_type in ["richTextBlock", "infoSection"]].content[])) +
+    length(array::join(pageBuilder[_type == "codeBlock"].code.code, " "))
+  ) / 5 / 200),
   coverImage,
   "date": coalesce(date, _updatedAt),
   "author": author->{firstName, lastName, picture},
@@ -44,6 +49,40 @@ const linkFields = /* groq */ `
       }
 `
 
+const pageBuilderProjection = /* groq */ `
+  "pageBuilder": pageBuilder[]{
+    ...,
+    _type == "callToAction" => {
+      ...,
+      button {
+        ...,
+        ${linkFields}
+      }
+    },
+    _type == "infoSection" => {
+      content[]{
+        ...,
+        markDefs[]{
+          ...,
+          ${linkReference}
+        }
+      }
+    },
+    _type == "richTextBlock" => {
+      content[]{
+        ...,
+        markDefs[]{
+          ...,
+          ${linkReference}
+        }
+      }
+    },
+    _type == "codeBlock" => {
+      ...
+    },
+  }
+`
+
 export const getPageQuery = defineQuery(`
   *[_type == 'page' && slug.current == $slug][0]{
     _id,
@@ -52,25 +91,7 @@ export const getPageQuery = defineQuery(`
     slug,
     heading,
     subheading,
-    "pageBuilder": pageBuilder[]{
-      ...,
-      _type == "callToAction" => {
-        ...,
-        button {
-          ...,
-          ${linkFields}
-        }
-      },
-      _type == "infoSection" => {
-        content[]{
-          ...,
-          markDefs[]{
-            ...,
-            ${linkReference}
-          }
-        }
-      },
-    },
+    ${pageBuilderProjection},
   }
 `)
 
@@ -104,6 +125,7 @@ export const postQuery = defineQuery(`
     }
   },
     ${postFields}
+    ${pageBuilderProjection},
   }
 `)
 

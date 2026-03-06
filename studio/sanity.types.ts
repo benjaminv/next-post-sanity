@@ -36,6 +36,17 @@ export type Link = {
   openInNewTab?: boolean
 }
 
+export type CodeBlock = {
+  _type: 'codeBlock'
+  filename?: string
+  code: Code
+}
+
+export type RichTextBlock = {
+  _type: 'richTextBlock'
+  content?: BlockContent
+}
+
 export type SanityImageAssetReference = {
   _ref: string
   _type: 'reference'
@@ -284,6 +295,12 @@ export type Page = {
     | ({
         _key: string
       } & InfoSection)
+    | ({
+        _key: string
+      } & RichTextBlock)
+    | ({
+        _key: string
+      } & CodeBlock)
   >
 }
 
@@ -296,6 +313,20 @@ export type Post = {
   title: string
   slug: Slug
   content?: BlockContent
+  pageBuilder?: Array<
+    | ({
+        _key: string
+      } & CallToAction)
+    | ({
+        _key: string
+      } & InfoSection)
+    | ({
+        _key: string
+      } & RichTextBlock)
+    | ({
+        _key: string
+      } & CodeBlock)
+  >
   excerpt?: string
   tags?: Array<string>
   coverImage?: {
@@ -326,6 +357,14 @@ export type Person = {
     alt?: string
     _type: 'image'
   }
+}
+
+export type Code = {
+  _type: 'code'
+  language?: string
+  filename?: string
+  code?: string
+  highlightedLines?: Array<number>
 }
 
 export type Slug = {
@@ -595,6 +634,8 @@ export type AllSanitySchemaTypes =
   | PageReference
   | PostReference
   | Link
+  | CodeBlock
+  | RichTextBlock
   | SanityImageAssetReference
   | CallToAction
   | InfoSection
@@ -609,6 +650,7 @@ export type AllSanitySchemaTypes =
   | Page
   | Post
   | Person
+  | Code
   | Slug
   | SanityAssistInstructionTask
   | SanityAssistTaskStatus

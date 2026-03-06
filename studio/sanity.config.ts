@@ -17,6 +17,7 @@ import {
 } from 'sanity/presentation'
 import {assist} from '@sanity/assist'
 import {colorInput} from '@sanity/color-input'
+import {codeInput} from '@sanity/code-input'
 
 // Environment variables for project configuration
 const projectId = process.env.SANITY_STUDIO_PROJECT_ID || 'your-projectID'
@@ -115,6 +116,10 @@ export default defineConfig({
                   href: resolveHref('post', doc?.slug)!,
                 },
                 {
+                  title: 'Posts',
+                  href: '/posts',
+                } satisfies DocumentLocation,
+                {
                   title: 'Home',
                   href: '/',
                 } satisfies DocumentLocation,
@@ -130,6 +135,7 @@ export default defineConfig({
     // Additional plugins for enhanced functionality
     unsplashImageAsset(),
     colorInput(),
+    codeInput(),
     assist(),
     visionTool(),
   ],

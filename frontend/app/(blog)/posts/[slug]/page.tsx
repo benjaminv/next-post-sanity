@@ -6,10 +6,12 @@ import {Suspense} from 'react'
 
 import Avatar from '@/app/components/Avatar'
 import DateComponent from '@/app/components/Date'
+import PageBuilder from '@/app/components/PageBuilder'
 import {MorePosts} from '@/app/components/Posts'
 import PortableText from '@/app/components/PortableText'
 import Image from '@/app/components/SanityImage'
 import {sanityFetch} from '@/sanity/lib/live'
+import {highlightCodeBlocks} from '@/sanity/lib/highlightCode'
 import {postPagesSlugs, postQuery, adjacentPostsQuery} from '@/sanity/lib/queries'
 import {resolveOpenGraphImage} from '@/sanity/lib/utils'
 
@@ -76,15 +78,18 @@ export default async function PostPage(props: Props) {
     return notFound()
   }
 
-  const {data: adjacent} = await sanityFetch({
-    query: adjacentPostsQuery,
-    params: {id: post._id, date: post.date, updatedAt: post.date},
-  })
+  const [{data: adjacent}, highlightedPageBuilder] = await Promise.all([
+    sanityFetch({
+      query: adjacentPostsQuery,
+      params: {id: post._id, date: post.date, updatedAt: post.date},
+    }),
+    highlightCodeBlocks(post.pageBuilder),
+  ])
 
   return (
     <>
       <div className="container mt-24 mb-12 lg:mt-32 lg:mb-24 grid gap-12">
-        <div>
+        <div className="overflow-hidden">
           {/* Back link */}
           <Link
             href="/posts"
@@ -116,7 +121,7 @@ export default async function PostPage(props: Props) {
               </svg>
               <DateComponent dateString={post.date} />
             </span>
-            {post.readTime > 0 && (
+            {(post.readTime ?? 0) > 0 && (
               <span className="flex items-center gap-1.5">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
                   <path fillRule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm.75-13a.75.75 0 0 0-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 0 0 0-1.5h-3.25V5Z" clipRule="evenodd" />
@@ -170,6 +175,11 @@ export default async function PostPage(props: Props) {
               />
             )}
           </article>
+
+          {/* Page builder sections */}
+          {highlightedPageBuilder && highlightedPageBuilder.length > 0 && (
+            <PageBuilder page={{...post, pageBuilder: highlightedPageBuilder as typeof post.pageBuilder}} hideEmptyState />
+          )}
 
           {/* Prev / Next navigation */}
           {(adjacent?.prev || adjacent?.next) && (

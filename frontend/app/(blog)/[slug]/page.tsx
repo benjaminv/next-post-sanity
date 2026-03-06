@@ -3,6 +3,7 @@ import Head from 'next/head'
 
 import PageBuilderPage from '@/app/components/PageBuilder'
 import {sanityFetch} from '@/sanity/lib/live'
+import {highlightCodeBlocks} from '@/sanity/lib/highlightCode'
 import {getPageQuery, pagesSlugs} from '@/sanity/lib/queries'
 import {GetPageQueryResult} from '@/sanity.types'
 import {PageOnboarding} from '@/app/components/Onboarding'
@@ -47,6 +48,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 export default async function Page(props: Props) {
   const params = await props.params
   const [{data: page}] = await Promise.all([sanityFetch({query: getPageQuery, params})])
+  const highlightedPageBuilder = await highlightCodeBlocks(page?.pageBuilder)
 
   if (!page?._id) {
     return (
@@ -71,7 +73,7 @@ export default async function Page(props: Props) {
           </div>
         </div>
       </div>
-      <PageBuilderPage page={page as GetPageQueryResult} />
+      <PageBuilderPage page={{...(page as GetPageQueryResult), pageBuilder: highlightedPageBuilder} as GetPageQueryResult} />
     </div>
   )
 }
