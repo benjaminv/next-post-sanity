@@ -62,6 +62,10 @@ export default defineConfig({
             filter: `_type == "settings" && _id == "siteSettings"`,
           },
           {
+            route: '/posts',
+            filter: `_type == "settings" && _id == "siteSettings"`,
+          },
+          {
             route: '/:slug',
             filter: `_type == "page" && slug.current == $slug || _id == $slug`,
           },
@@ -101,6 +105,10 @@ export default defineConfig({
                   title: doc?.title || 'Untitled',
                   href: resolveHref('post', doc?.slug)!,
                 },
+                {
+                  title: 'Posts',
+                  href: '/posts',
+                } satisfies DocumentLocation,
                 {
                   title: 'Home',
                   href: '/',
