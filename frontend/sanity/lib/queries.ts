@@ -26,9 +26,9 @@ const postFields = /* groq */ `
   excerpt,
   tags,
   "readTime": round((
-    length(pt::text(content)) +
-    length(pt::text(pageBuilder[_type in ["richTextBlock", "infoSection"]].content[])) +
-    length(array::join(pageBuilder[_type == "codeBlock"].code.code, " "))
+    coalesce(length(pt::text(content)), 0) +
+    coalesce(length(pt::text(pageBuilder[_type in ["richTextBlock", "infoSection"]].content[])), 0) +
+    coalesce(length(array::join(pageBuilder[_type == "codeBlock"].code.code, " ")), 0)
   ) / 5 / 200),
   coverImage,
   "date": coalesce(date, _updatedAt),
