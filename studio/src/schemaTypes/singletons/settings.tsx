@@ -33,7 +33,7 @@ export const settings = defineType({
     }),
     defineField({
       name: 'description',
-      description: 'Used on the Homepage',
+      description: 'Used on homepage and in meta tags.',
       title: 'Description',
       type: 'array',
       group: 'general',

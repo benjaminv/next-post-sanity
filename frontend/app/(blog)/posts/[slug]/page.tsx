@@ -54,8 +54,11 @@ export async function generateMetadata(props: Props, parent: ResolvingMetadata):
     params,
     stega: false,
   })
-  const previousImages = (await parent).openGraph?.images || []
+  const parentMeta = await parent
+  const previousImages = parentMeta.openGraph?.images || []
   const ogImage = resolveOpenGraphImage(post?.coverImage)
+  const description = post?.excerpt || parentMeta.description || ''
+  const twitterImage = ogImage?.url || parentMeta.twitter?.images?.[0]?.url
 
   return {
     authors:
@@ -63,9 +66,15 @@ export async function generateMetadata(props: Props, parent: ResolvingMetadata):
         ? [{name: `${post.author.firstName} ${post.author.lastName}`}]
         : [],
     title: post?.title,
-    description: post?.excerpt,
+    description,
     openGraph: {
       images: ogImage ? [ogImage, ...previousImages] : previousImages,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post?.title,
+      description,
+      ...(twitterImage ? {images: [twitterImage]} : {}),
     },
   } satisfies Metadata
 }
