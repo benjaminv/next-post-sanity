@@ -14,7 +14,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   })
   const headersList = await headers()
   const sitemap: MetadataRoute.Sitemap = []
-  const domain: string = headersList.get('host') as string
+  const host = headersList.get('host') as string
+  const domain = `https://${host}`
   sitemap.push({
     url: domain as string,
     lastModified: new Date(),
