@@ -258,7 +258,7 @@ export type Settings = {
     label: string
     url: string
     openInNewTab?: boolean
-    _type: 'navLink'
+    _type: 'footerLink'
     _key: string
   }>
 }
@@ -808,7 +808,7 @@ export type SettingsQueryResult = {
     label: string
     url: string
     openInNewTab?: boolean
-    _type: 'navLink'
+    _type: 'footerLink'
     _key: string
   }> | null
 } | null

@@ -1775,7 +1775,7 @@
                 "type": "objectAttribute",
                 "value": {
                   "type": "string",
-                  "value": "navLink"
+                  "value": "footerLink"
                 }
               }
             },

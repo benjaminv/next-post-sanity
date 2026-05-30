@@ -4,34 +4,31 @@ import type {Link, Settings} from '../../../sanity.types'
 
 import * as demo from '../../lib/initialValues'
 
-const navLinkMember = defineArrayMember({
-  type: 'object',
-  name: 'navLink',
-  fields: [
-    defineField({
-      name: 'label',
-      title: 'Label',
-      type: 'string',
-      validation: (rule) => rule.required(),
-    }),
-    defineField({
-      name: 'url',
-      title: 'URL',
-      type: 'url',
-      validation: (rule) =>
-        rule.required().uri({allowRelative: true, scheme: ['http', 'https']}),
-    }),
-    defineField({
-      name: 'openInNewTab',
-      title: 'Open in new tab',
-      type: 'boolean',
-      initialValue: false,
-    }),
-  ],
-  preview: {
-    select: {title: 'label', subtitle: 'url'},
-  },
-})
+const navLinkFields = [
+  defineField({
+    name: 'label',
+    title: 'Label',
+    type: 'string',
+    validation: (rule) => rule.required(),
+  }),
+  defineField({
+    name: 'url',
+    title: 'URL',
+    type: 'url',
+    validation: (rule) =>
+      rule.required().uri({allowRelative: true, scheme: ['http', 'https']}),
+  }),
+  defineField({
+    name: 'openInNewTab',
+    title: 'Open in new tab',
+    type: 'boolean',
+    initialValue: false,
+  }),
+]
+
+const navLinkPreview = {
+  select: {title: 'label', subtitle: 'url'},
+}
 
 /**
  * Settings schema Singleton.  Singletons are single documents that are displayed not in a collection, handy for things like site settings and other global configurations.
@@ -210,7 +207,14 @@ export const settings = defineType({
       description: 'Text links displayed in the site header.',
       type: 'array',
       group: 'navigation',
-      of: [navLinkMember],
+      of: [
+        defineArrayMember({
+          type: 'object',
+          name: 'navLink',
+          fields: navLinkFields,
+          preview: navLinkPreview,
+        }),
+      ],
     }),
 
     // ── Homepage ──
@@ -438,7 +442,14 @@ export const settings = defineType({
       description: 'Links displayed on the right side of the footer.',
       type: 'array',
       group: 'footer',
-      of: [navLinkMember],
+      of: [
+        defineArrayMember({
+          type: 'object',
+          name: 'footerLink',
+          fields: navLinkFields,
+          preview: navLinkPreview,
+        }),
+      ],
     }),
   ],
   preview: {

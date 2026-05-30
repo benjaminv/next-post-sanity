@@ -22,12 +22,15 @@ export default async function Header() {
               role="list"
               className="flex items-center gap-4 md:gap-6 leading-5 text-xs sm:text-base tracking-tight font-mono"
             >
-              {settings?.headerNav?.map((item) => (
+              {(settings?.headerNav?.length
+                ? settings.headerNav
+                : [{_key: 'fallback-blog', label: 'Blog', url: '/posts'}]
+              ).map((item) => (
                 <li key={item._key}>
                   <Link
-                    href={item.url!}
+                    href={item.url || '#'}
                     className="hover:underline"
-                    {...(item.openInNewTab
+                    {...('openInNewTab' in item && item.openInNewTab
                       ? {target: '_blank', rel: 'noopener noreferrer'}
                       : {})}
                   >
