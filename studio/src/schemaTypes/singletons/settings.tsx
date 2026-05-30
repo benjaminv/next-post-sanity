@@ -4,6 +4,32 @@ import type {Link, Settings} from '../../../sanity.types'
 
 import * as demo from '../../lib/initialValues'
 
+const navLinkFields = [
+  defineField({
+    name: 'label',
+    title: 'Label',
+    type: 'string',
+    validation: (rule) => rule.required(),
+  }),
+  defineField({
+    name: 'url',
+    title: 'URL',
+    type: 'url',
+    validation: (rule) =>
+      rule.required().uri({allowRelative: true, scheme: ['http', 'https']}),
+  }),
+  defineField({
+    name: 'openInNewTab',
+    title: 'Open in new tab',
+    type: 'boolean',
+    initialValue: false,
+  }),
+]
+
+const navLinkPreview = {
+  select: {title: 'label', subtitle: 'url'},
+}
+
 /**
  * Settings schema Singleton.  Singletons are single documents that are displayed not in a collection, handy for things like site settings and other global configurations.
  * Learn more: https://www.sanity.io/docs/create-a-link-to-a-single-edit-page-in-your-main-document-type-list
@@ -16,6 +42,7 @@ export const settings = defineType({
   icon: CogIcon,
   groups: [
     {name: 'general', title: 'General', default: true},
+    {name: 'navigation', title: 'Navigation'},
     {name: 'homepage', title: 'Homepage'},
     {name: 'about', title: 'About'},
     {name: 'footer', title: 'Footer'},
@@ -171,6 +198,23 @@ export const settings = defineType({
       description: 'The content value from your Google Search Console meta tag.',
       type: 'string',
       group: 'general',
+    }),
+
+    // ── Navigation ──
+    defineField({
+      name: 'headerNav',
+      title: 'Header Navigation',
+      description: 'Text links displayed in the site header.',
+      type: 'array',
+      group: 'navigation',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          name: 'navLink',
+          fields: navLinkFields,
+          preview: navLinkPreview,
+        }),
+      ],
     }),
 
     // ── Homepage ──
@@ -402,23 +446,8 @@ export const settings = defineType({
         defineArrayMember({
           type: 'object',
           name: 'footerLink',
-          fields: [
-            defineField({
-              name: 'label',
-              title: 'Label',
-              type: 'string',
-              validation: (rule) => rule.required(),
-            }),
-            defineField({
-              name: 'url',
-              title: 'URL',
-              type: 'url',
-              validation: (rule) => rule.required(),
-            }),
-          ],
-          preview: {
-            select: {title: 'label', subtitle: 'url'},
-          },
+          fields: navLinkFields,
+          preview: navLinkPreview,
         }),
       ],
     }),
